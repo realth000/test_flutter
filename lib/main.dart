@@ -2,10 +2,12 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,22 +16,22 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lime,
       ),
       routes: {
-        "chapter_3": (context) => Chapter3Route(),
-        "/": (context) => MyHomePage(title: 'flutter demo home page'),
+        "chapter_3": (context) => const Chapter3Route(),
+        "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class _MyHomePage extends StatefulWidget {
+  const _MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<_MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -59,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 '$_counter',
                 style: Theme.of(context).textTheme.headline4,
               ),
-              RandomWordsWidget(),
-              RouterTestRoute(),
+              const RandomWordsWidget(),
+              const RouterTestRoute(),
               ElevatedButton(
                 child: const Text("Open chapter 3 route ✌✌✌"),
                 onPressed: () {
@@ -73,14 +75,14 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: Stack(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(bottom: 80),
+              padding: const EdgeInsets.only(bottom: 80),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
                   heroTag: "clearCounterButton",
                   onPressed: _clearCounter,
                   tooltip: 'Clear',
-                  child: Icon(Icons.clear),
+                  child: const Icon(Icons.clear),
                 ),
               ),
             ),
@@ -100,14 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // 2.4.4
 class RouterTestRoute extends StatelessWidget {
+  const RouterTestRoute({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
         onPressed: () async {
-          var result = await Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-            return TipRoute(text: "route chapter 2");
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const TipRoute(text: "route chapter 2");
           }));
         },
         child: const Text("Open chapter 2 route✌✌"),
@@ -117,7 +120,7 @@ class RouterTestRoute extends StatelessWidget {
 }
 
 class TipRoute extends StatelessWidget {
-  TipRoute({
+  const TipRoute({
     Key? key,
     required this.text,
   }) : super(key: key);
@@ -134,14 +137,14 @@ class TipRoute extends StatelessWidget {
         title: const Text('Chapter 2 Route'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(18),
+        padding: const EdgeInsets.all(18),
         child: Center(
           child: Column(
             children: <Widget>[
               Text(text),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, getTime()),
-                child: Text("返回"),
+                child: const Text("返回"),
               )
             ],
           ),
@@ -153,6 +156,8 @@ class TipRoute extends StatelessWidget {
 
 // 2.5.3
 class RandomWordsWidget extends StatelessWidget {
+  const RandomWordsWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final wordPair = WordPair.random();
@@ -163,26 +168,31 @@ class RandomWordsWidget extends StatelessWidget {
 
 // 3
 class Chapter3Route extends StatelessWidget {
+  const Chapter3Route({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Chapter 3 Route'),
         ),
-        body: Chapter3Widget());
+        body: const Chapter3Widget());
   }
 }
 
 class Chapter3Widget extends StatelessWidget {
+  const Chapter3Widget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(18),
+      padding: const EdgeInsets.all(18),
       child: Center(
         child: Column(
-          children: <Widget>[
+          children: const <Widget>[
             Chapter3TextWidget(),
             Chapter3ButtonWidget(),
+            Chapter3IconWidget(),
           ],
         ),
       ),
@@ -191,6 +201,8 @@ class Chapter3Widget extends StatelessWidget {
 }
 
 class Chapter3TextWidget extends StatelessWidget {
+  const Chapter3TextWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -225,10 +237,12 @@ class Chapter3TextWidget extends StatelessWidget {
 }
 
 class Chapter3ButtonWidget extends StatelessWidget {
+  const Chapter3ButtonWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(18),
+      padding: const EdgeInsets.all(18),
       child: Center(
         child: Column(
           children: <Widget>[
@@ -269,4 +283,50 @@ class Chapter3ButtonWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class Chapter3IconWidget extends StatelessWidget {
+  const Chapter3IconWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            const Image(
+              image: AssetImage('assets/images/1finger.png'),
+              width: 30,
+            ),
+            const Image(
+              image: NetworkImage(
+                  'https://avatars.githubusercontent.com/u/59462104?v=4'),
+              width: 30,
+            ),
+            Image.network(
+              'https://avatars.githubusercontent.com/u/59462104?v=4',
+              width: 60,
+            ),
+            const Icon(
+              Icons.fingerprint,
+              color: Colors.red,
+            ),
+            const Icon(
+              _Chapger3MyIcons.data1,
+              color: Colors.red,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Chapger3MyIcons {
+  static const IconData data1 = IconData(
+    0xf89b,
+    fontFamily: 'fontawesome',
+    matchTextDirection: true,
+  );
 }
