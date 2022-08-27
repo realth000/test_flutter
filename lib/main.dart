@@ -177,36 +177,96 @@ class Chapter3Widget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(18),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              const Text(
-                "Chapter 3.1.1-1",
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                "Chapter 3.1.1-2 3.1415926535897 2.71828" * 2,
-                textAlign: TextAlign.left,
-                maxLines: 1,
-              ),
-              const Text(
-                "Chapter 3.1.1-3",
-                textAlign: TextAlign.left,
-              ),
-              const Text(
-                "Chapter 3.1.1-4@r",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18,
-                  height: 1.2,
-                  fontFamily: "Consolas",
-                  decoration: TextDecoration.underline,
-                  decorationStyle: TextDecorationStyle.dashed,
-                ),
-              )
-            ],
+      padding: EdgeInsets.all(18),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Chapter3TextWidget(),
+            Chapter3ButtonWidget(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Chapter3TextWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const Text(
+          "Chapter 3.1.1-1",
+          textAlign: TextAlign.left,
+        ),
+        Text(
+          "Chapter 3.1.1-2 3.1415926535897 2.71828" * 2,
+          textAlign: TextAlign.left,
+          maxLines: 1,
+        ),
+        const Text(
+          "Chapter 3.1.1-3",
+          textAlign: TextAlign.left,
+        ),
+        const Text(
+          "Chapter 3.1.1-4@r",
+          style: TextStyle(
+            color: Colors.blue,
+            fontSize: 18,
+            height: 1.2,
+            fontFamily: "Consolas",
+            decoration: TextDecoration.underline,
+            decorationStyle: TextDecorationStyle.dashed,
           ),
-        ));
+        )
+      ],
+    );
+  }
+}
+
+class Chapter3ButtonWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(18),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text("Elevated Button"),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.flight),
+              onPressed: () {},
+              label: const Text("Elevated Button With Icon"),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text("Text Button"),
+            ),
+            TextButton.icon(
+              onPressed: () {},
+              label: const Text("Text Button With Icon"),
+              icon: const Icon(Icons.abc),
+            ),
+            OutlinedButton(
+              onPressed: () {},
+              child: const Text("Outline Button"),
+            ),
+            OutlinedButton.icon(
+              onPressed: () {},
+              label: const Text("Outline Button With Icon"),
+              icon: const Icon(Icons.abc_outlined),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.ac_unit),
+              tooltip: "Icon Button",
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
