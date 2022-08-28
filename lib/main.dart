@@ -185,15 +185,18 @@ class Chapter3Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18),
-      child: Center(
-        child: Column(
-          children: const <Widget>[
-            Chapter3TextWidget(),
-            Chapter3ButtonWidget(),
-            Chapter3IconWidget(),
-          ],
+    return Scrollbar(
+      // padding: const EdgeInsets.all(18),
+      child: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              const Chapter3TextWidget(),
+              const Chapter3ButtonWidget(),
+              const Chapter3IconWidget(),
+              Chapter3SwitchWidget(),
+            ],
+          ),
         ),
       ),
     );
@@ -330,3 +333,85 @@ class _Chapger3MyIcons {
     matchTextDirection: true,
   );
 }
+
+class Chapter3SwitchWidget extends StatefulWidget {
+  const Chapter3SwitchWidget({Key? key}) : super(key: key);
+
+  @override
+  _SwitchAndCheckBoxTestRouteState createState() =>
+      _SwitchAndCheckBoxTestRouteState();
+}
+
+class _SwitchAndCheckBoxTestRouteState extends State<Chapter3SwitchWidget> {
+  bool _switchSelected = true;
+  bool _checkboxSelected = true;
+  String switchState = 'closed';
+  String checkboxState = 'closed';
+
+  void updateSwitch() {
+    setState(() {
+      switchState = _switchSelected ? 'opened' : 'closed';
+      checkboxState = _checkboxSelected ? 'opened' : 'closed';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Switch(
+                  value: _switchSelected,
+                  onChanged: (value) {
+                    setState(() {
+                      _switchSelected = value;
+                      updateSwitch();
+                    });
+                  },
+                ),
+                Text(
+                  switchState,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Checkbox(
+                  value: _checkboxSelected,
+                  tristate: false,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value == null) {
+                        _checkboxSelected = false;
+                      } else {
+                        _checkboxSelected = value;
+                      }
+                      updateSwitch();
+                    });
+                  },
+                ),
+                Text(
+                  checkboxState,
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*
+   ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   abcdefghijklmnopqrstuvwxyz
+   0123456789
+   oOiIl1
+   ~!@#$%^&*()
+
+ */
