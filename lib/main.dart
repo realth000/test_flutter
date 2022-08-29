@@ -195,6 +195,7 @@ class Chapter3Widget extends StatelessWidget {
               const Chapter3ButtonWidget(),
               const Chapter3IconWidget(),
               Chapter3SwitchWidget(),
+              Chapter3TextFieldWidget(),
             ],
           ),
         ),
@@ -403,6 +404,107 @@ class _SwitchAndCheckBoxTestRouteState extends State<Chapter3SwitchWidget> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Chapter3TextFieldWidget extends StatefulWidget {
+  const Chapter3TextFieldWidget({Key? key}) : super(key: key);
+
+  @override
+  _Chapter3TextFieldWidgetState createState() =>
+      _Chapter3TextFieldWidgetState();
+}
+
+class _Chapter3TextFieldWidgetState extends State<Chapter3TextFieldWidget> {
+  String _accountString = '';
+  String _passwordString = '';
+  bool _loggedin = false;
+  final TextEditingController _accountController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  GlobalKey _formKey = GlobalKey<FormState>();
+
+  void _updateAccount(String account) {
+    setState(() {
+      _accountString = account;
+    });
+  }
+
+  void _updatePassword(String password) {
+    setState(() {
+      _passwordString = password;
+    });
+  }
+
+  @override
+  void initState() {
+    // FIXME: Why must call super.initState here, as build function does not need it.
+    super.initState();
+    _accountController.addListener(() {
+      _updateAccount(_accountController.text);
+    });
+    _passwordController.addListener(() {
+      _updatePassword(_passwordController.text);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: "Account",
+              hintText: "Username or email",
+              prefixIcon: Icon(Icons.person),
+            ),
+            controller: _accountController,
+            validator: (v) {
+              return v!.trim().isNotEmpty ? null : 'User can not be empty';
+            },
+          ),
+          Text("acount=$_accountString"),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: "Password",
+              hintText: "Your password",
+              prefixIcon: Icon(Icons.lock),
+            ),
+            obscureText: true,
+            controller: _passwordController,
+            validator: (v) {
+              return v!.trim().length > 5 ? null : 'Password should > 5';
+            },
+          ),
+          Text("password=$_passwordString"),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _loggedin =
+                            (_formKey.currentState as FormState).validate();
+                      });
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(18),
+                      child: Text('ok'),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Text("loggedin=$_loggedin"),
+        ],
       ),
     );
   }
