@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
@@ -196,6 +198,7 @@ class Chapter3Widget extends StatelessWidget {
               const Chapter3IconWidget(),
               Chapter3SwitchWidget(),
               Chapter3TextFieldWidget(),
+              Chapter3ProgressIndicator(),
             ],
           ),
         ),
@@ -505,6 +508,80 @@ class _Chapter3TextFieldWidgetState extends State<Chapter3TextFieldWidget> {
           ),
           Text("loggedin=$_loggedin"),
         ],
+      ),
+    );
+  }
+}
+
+class Chapter3ProgressIndicator extends StatefulWidget {
+  @override
+  _Chapter3ProgressIndicatorState createState() =>
+      _Chapter3ProgressIndicatorState();
+}
+
+class _Chapter3ProgressIndicatorState extends State<Chapter3ProgressIndicator> {
+  bool _running = true;
+  double _value = 0;
+  Timer? _timer;
+
+  void _updateValue(Timer timer) {
+    setState(() {
+      print("Update value on" + DateTime.now().toString().substring(0, 19));
+      _value += 0.1;
+      if (_value >= 1) {
+        _value -= 1;
+      }
+    });
+  }
+
+  _Chapter3ProgressIndicatorState() {
+    _timer = Timer.periodic(const Duration(seconds: 1), _updateValue);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(18),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 10,
+              child: LinearProgressIndicator(
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation(Colors.lime),
+                value: _value,
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 60,
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation(Colors.lime),
+                value: _value,
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _running = !_running;
+                if (!_running) {
+                  _timer?.cancel();
+                } else {
+                  // TODO: Restart timer?
+                }
+              },
+              child: const Text('control'),
+            ),
+          ],
+        ),
       ),
     );
   }
