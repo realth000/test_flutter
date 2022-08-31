@@ -24,6 +24,13 @@ class MyApp extends StatelessWidget {
         "chapter_4": (context) => const Chapter4Route(),
         "chapter_4/constraint_widget": (context) =>
             const Chapter4ConstraintsWidget(),
+        "chapter_4/row_column_widget": (context) =>
+            const Chapter4LinearWidget(),
+        "chapter_4/flex_widget": (context) => const Chapter4FlexWidget(),
+        "chapter_4/wrap_widget": (context) => const Chapter4WrapWidget(),
+        "chapter_4/cascade_widget": (context) => const Chapter4CascadeWidget(),
+        "chapter_4/layout_widget": (context) =>
+            const Chapter4LayoutBuilderWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
