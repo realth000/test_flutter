@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'common.dart';
+
 class Chapter4Route extends StatelessWidget {
   const Chapter4Route({Key? key}) : super(key: key);
 
@@ -11,15 +13,6 @@ class Chapter4Route extends StatelessWidget {
 
 class Chapter4Widget extends StatelessWidget {
   const Chapter4Widget({Key? key}) : super(key: key);
-
-  Widget getRoute(BuildContext context, String text, String routeName) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.pushNamed(context, routeName);
-      },
-      child: Text(text),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

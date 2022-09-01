@@ -4,6 +4,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 import 'chapter4.dart';
+import 'chapter5.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "chapter_3": (context) => const Chapter3Route(),
         "chapter_4": (context) => const Chapter4Route(),
+        "chapter_5": (context) => const Chapter5Route(),
         "chapter_4/constraint_widget": (context) =>
             const Chapter4ConstraintsWidget(),
         "chapter_4/row_column_widget": (context) =>
@@ -31,6 +33,17 @@ class MyApp extends StatelessWidget {
         "chapter_4/cascade_widget": (context) => const Chapter4CascadeWidget(),
         "chapter_4/layout_widget": (context) =>
             const Chapter4LayoutBuilderWidget(),
+        "chapter_5/padding_widget": (context) => const Chapter5PaddingWidget(),
+        "chapter_5/decorated_widget": (context) =>
+            const Chapter5DecorateWidget(),
+        "chapter_5/transform_widget": (context) =>
+            const Chapter5TransformWidget(),
+        "chapter_5/container_widget": (context) =>
+            const Chapter5ContainerWidget(),
+        "chapter_5/clip_widget": (context) => const Chapter5ClipWidget(),
+        "chapter_5/fitted_widget": (context) => const Chapter5FittedWidget(),
+        "chapter_5/scaffold_widget": (context) =>
+            const Chapter5ScaffoldWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
@@ -88,6 +101,12 @@ class _MyHomePageState extends State<_MyHomePage> {
                   Navigator.pushNamed(context, "chapter_4");
                 },
                 child: const Text("Open chapter 4 route ✌✌✌✌"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "chapter_5");
+                },
+                child: const Text("Open chapter 5 route ✌✌✌✌✌"),
               ),
             ],
           ),
