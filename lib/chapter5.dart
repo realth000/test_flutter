@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:test_flutter/common.dart';
 
@@ -280,7 +281,7 @@ class Chapter5ContainerWidget extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(top: 50.0, left: 120.0),
             constraints:
-            const BoxConstraints.tightFor(width: 200.0, height: 150.0),
+                const BoxConstraints.tightFor(width: 200.0, height: 150.0),
             decoration: const BoxDecoration(
               gradient: RadialGradient(
                 colors: [Colors.red, Colors.orange],
@@ -377,11 +378,10 @@ class Chapter5FittedWidget extends StatelessWidget {
                 wRow(' 800 '),
                 FittedBox(child: wRow(' 800 ')),
               ]
-                  .map((e) =>
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: e,
-                  ))
+                  .map((e) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: e,
+                      ))
                   .toList(),
             ),
           ),
@@ -396,11 +396,10 @@ class Chapter5ScaffoldWidget extends StatefulWidget {
 
   @override
   _Chapter5ScaffoldWidgetState createState() => _Chapter5ScaffoldWidgetState();
-
 }
 
 class _Chapter5ScaffoldWidgetState extends State<Chapter5ScaffoldWidget> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   void _setCurrentIndex(int index) {
     setState(() {
@@ -414,26 +413,75 @@ class _Chapter5ScaffoldWidgetState extends State<Chapter5ScaffoldWidget> {
       appBar: AppBar(
         title: const Text('Chapter 5 Scaffold Widget'),
         actions: <Widget>[
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share),),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.share),
+          ),
         ],
       ),
       drawer: Drawer(
-
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 38),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: ClipOval(
+                        child: Image.network(
+                          'https://avatars.githubusercontent.com/u/59462104?v=4',
+                          width: 60,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      'TEST FLUTTER',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    const ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Add'),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.arrow_back),
+                      title: const Text('Return'),
+                      onTap: () {
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('chapter_5'));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-          BottomNavigationBarItem(icon: Icon(Icons.business),
-              label: 'BUSINESS'),
-          BottomNavigationBarItem(icon: Icon(Icons.business),
-              label: 'BUSINESS'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.business), label: 'BUSINESS'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.business), label: 'BUSINESS'),
         ],
         currentIndex: _currentIndex,
         onTap: _setCurrentIndex,
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: (){},
+        child: const Icon(Icons.add),
+        onPressed: () {},
       ),
     );
   }
