@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:test_flutter/chapter6.dart';
 
 import 'chapter4.dart';
 import 'chapter5.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         "chapter_3": (context) => const Chapter3Route(),
         "chapter_4": (context) => const Chapter4Route(),
         "chapter_5": (context) => const Chapter5Route(),
+        "chapter_6": (context) => const Chapter6Route(),
         "chapter_4/constraint_widget": (context) =>
             const Chapter4ConstraintsWidget(),
         "chapter_4/row_column_widget": (context) =>
@@ -44,6 +46,16 @@ class MyApp extends StatelessWidget {
         "chapter_5/fitted_widget": (context) => const Chapter5FittedWidget(),
         "chapter_5/scaffold_widget": (context) =>
             const Chapter5ScaffoldWidget(),
+        "chapter_6/silver_widget": (context) => const Chapter6SliverWidget(),
+        "chapter_6/list_View_widget": (context) =>
+            const Chapter6ListViewWidget(),
+        "chapter_6/scroll_widget": (context) => const Chapter6ScrollWidget(),
+        "chapter_6/animated_widget": (context) =>
+            const Chapter6AnimatedWidget(),
+        "chapter_6/grid_widget": (context) => const Chapter6GridWidget(),
+        "chapter_6/page_widget": (context) => const Chapter6PageViewWidget(),
+        "chapter_6/tab_bar_widget": (context) => const Chapter6TabBarWidget(),
+        "chapter_6/custom_widget": (context) => const Chapter6CustomWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
@@ -107,6 +119,12 @@ class _MyHomePageState extends State<_MyHomePage> {
                   Navigator.pushNamed(context, "chapter_5");
                 },
                 child: const Text("Open chapter 5 route ✌✌✌✌✌"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "chapter_6");
+                },
+                child: const Text("Open chapter 6 route ✌✌✌✌✌✌"),
               ),
             ],
           ),
