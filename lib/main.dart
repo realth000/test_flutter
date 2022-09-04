@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
         "chapter_6/custom_widget": (context) => const Chapter6CustomWidget(),
         "chapter_6/s1_widget": (context) =>
             const Chapter6SliverFlexibleWidget(),
+        "chapter_6/s2_widget": (context) => const Chapter6S2Widget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
