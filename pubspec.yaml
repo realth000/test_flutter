@@ -90,6 +90,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/images/1finger.png
+    - assets/images/59462104.jpg
 
   fonts:
     - family: fontawesome

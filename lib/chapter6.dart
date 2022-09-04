@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:test_flutter/common.dart';
 
 class Chapter6Route extends StatelessWidget {
@@ -42,6 +45,7 @@ class Chapter6Widget extends StatelessWidget {
                     'chapter_6/tab_bar_widget'),
                 getRoute(context, 'Chapter 6 Custom Widget',
                     'chapter_6/custom_widget'),
+                getRoute(context, 'Chapter 6 S1 Widget', 'chapter_6/s1_widget'),
               ],
             ),
           ),
@@ -652,7 +656,7 @@ class _Chapter6TabBarWidgetState extends State<Chapter6TabBarWidget>
         body: TabBarView(
           controller: _tabController,
           children: tabs.map(
-            (e) {
+                (e) {
               return KeepAliveWrapper(
                 child: Container(
                   alignment: Alignment.center,
@@ -705,7 +709,7 @@ class _Chapter6CustomWidgetState extends State<Chapter6CustomWidget> {
   static Widget buildTwoSliverList() {
     var listView = SliverFixedExtentList(
         delegate: SliverChildBuilderDelegate(
-          (_, index) => ListTile(
+              (_, index) => ListTile(
             title: Text('$index'),
           ),
           childCount: 10,
@@ -739,6 +743,174 @@ class _Chapter6CustomWidgetState extends State<Chapter6CustomWidget> {
           BottomNavigationBarItem(icon: Icon(Icons.two_k), label: '2'),
           BottomNavigationBarItem(icon: Icon(Icons.three_k), label: '3'),
         ],
+      ),
+    );
+  }
+}
+
+class Chapter6SliverFlexibleWidget extends StatelessWidget {
+  const Chapter6SliverFlexibleWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Custom Flex Widget'),
+      ),
+      body: CustomScrollView(
+        // 去掉这个BouncingScrollPhysics设置以后，滑到最顶端时无法继续滑出顶部图片
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        slivers: [
+          SliverFlexibleHeader(
+            // 这个200的高度需要传递到最里层
+            visibleExtent: 200, // 初始状态在列表中占用的布局高度
+            // 为了能根据下拉状态变化来定制显示的布局，我们通过一个 builder 来动态构建布局。
+            builder: (context, availableHeight) {
+              return GestureDetector(
+                child: Image(
+                  image: const AssetImage("assets/images/59462104.jpg"),
+                  width: 50.0,
+                  height: availableHeight,
+                  alignment: Alignment.bottomCenter,
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+          // 下面放30个长的
+          buildSliverList(30),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSliverList([int count = 5]) {
+    return SliverFixedExtentList(
+      itemExtent: 50,
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return ListTile(title: Text('$index'));
+        },
+        childCount: count,
+      ),
+    );
+  }
+}
+
+class _SliverFlexibleHeader extends SingleChildRenderObjectWidget {
+  const _SliverFlexibleHeader({
+    Key? key,
+    required Widget child,
+    this.visibleExtent = 0,
+  }) : super(key: key, child: child);
+  final double visibleExtent;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _FlexibleHeaderRenderSliver(visibleExtent);
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _FlexibleHeaderRenderSliver renderObject) {
+    // 这一行暂时没看出有什么用
+    renderObject.visibleExtent = visibleExtent;
+  }
+}
+
+class _FlexibleHeaderRenderSliver extends RenderSliverSingleBoxAdapter {
+  _FlexibleHeaderRenderSliver(double visibleExtent)
+      : _visibleExtent = visibleExtent;
+
+  double _lastOverScroll = 0;
+
+  // double _lastScrollOffset = 0;
+  late double _visibleExtent = 0;
+
+  set visibleExtent(double value) {
+    // 可视长度发生变化，更新状态并重新布局
+    if (_visibleExtent != value) {
+      _lastOverScroll = 0;
+      _visibleExtent = value;
+      markNeedsLayout();
+    }
+  }
+
+  @override
+  void performLayout() {
+    // 滑动距离大于_visibleExtent时则表示子节点已经在屏幕之外了
+    if (child == null || (constraints.scrollOffset > _visibleExtent)) {
+      geometry = SliverGeometry(scrollExtent: _visibleExtent);
+      print('AAA ${geometry}');
+      return;
+    }
+
+    // 测试overlap,下拉过程中overlap会一直变化.
+    // overScroll: 滑动过程中，相对于默认0的位置，向上滑动了多远
+    // scrollOffset: 滑动过程中，相对于默认0的位置，向下滑动了多远
+    // 上面两个距离至少有一个为0，滑到下面时，overScroll为0，滑到上面时，scrollOffset为0
+    double overScroll = constraints.overlap < 0 ? constraints.overlap.abs() : 0;
+    var scrollOffset = constraints.scrollOffset;
+
+    print('BBB ${overScroll} ${scrollOffset}');
+    // 在Viewport中顶部的可视空间为该 Sliver 可绘制的最大区域。
+    // 1. 如果Sliver已经滑出可视区域则 constraints.scrollOffset 会大于 _visibleExtent，
+    //    这种情况我们在一开始就判断过了。
+    // 2. 如果我们下拉超出了边界，此时 overScroll>0，scrollOffset 值为0，所以最终的绘制区域为
+    //    _visibleExtent + overScroll.
+    double paintExtent = _visibleExtent + overScroll - constraints.scrollOffset;
+    // 绘制高度不超过最大可绘制空间
+    // 超出这个空间似乎也可以绘制，但是注意，还是不要超出
+    paintExtent = math.min(paintExtent, constraints.remainingPaintExtent);
+
+    //对子组件进行布局，关于 layout 详细过程我们将在本书后面布局原理相关章节详细介绍，现在只需知道
+    //子组件通过 LayoutBuilder可以拿到这里我们传递的约束对象（ExtraInfoBoxConstraints）
+    child!.layout(
+      constraints.asBoxConstraints(maxExtent: paintExtent),
+      parentUsesSize: false,
+    );
+
+    //最大为_visibleExtent，最小为 0
+    double layoutExtent = math.min(_visibleExtent, paintExtent);
+
+    //设置geometry，Viewport 在布局时会用到
+    geometry = SliverGeometry(
+      scrollExtent: layoutExtent,
+      paintOrigin: -overScroll,
+      paintExtent: paintExtent,
+      maxPaintExtent: paintExtent,
+      layoutExtent: layoutExtent,
+    );
+  }
+}
+
+typedef SliverFlexibleHeaderBuilder = Widget Function(
+  BuildContext context,
+  double maxExtent,
+  //ScrollDirection direction,
+);
+
+// Header item
+class SliverFlexibleHeader extends StatelessWidget {
+  const SliverFlexibleHeader({
+    Key? key,
+    this.visibleExtent = 0,
+    required this.builder,
+  }) : super(key: key);
+
+  final SliverFlexibleHeaderBuilder builder;
+  final double visibleExtent;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SliverFlexibleHeader(
+      visibleExtent: visibleExtent,
+      // 用builder根据滚动位置返回不同的情况
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return builder(context, constraints.maxHeight);
+        },
       ),
     );
   }
