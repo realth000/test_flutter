@@ -47,6 +47,8 @@ class Chapter6Widget extends StatelessWidget {
                     'chapter_6/custom_widget'),
                 getRoute(context, 'Chapter 6 S1 Widget', 'chapter_6/s1_widget'),
                 getRoute(context, 'Chapter 6 S2 Widget', 'chapter_6/s2_widget'),
+                getRoute(context, 'Chapter 6 Nested Widget',
+                    'chapter_6/nested_widget'),
               ],
             ),
           ),
@@ -785,18 +787,18 @@ class Chapter6SliverFlexibleWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget buildSliverList([int count = 5]) {
-    return SliverFixedExtentList(
-      itemExtent: 50,
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return ListTile(title: Text('$index'));
-        },
-        childCount: count,
-      ),
-    );
-  }
+Widget buildSliverList([int count = 5]) {
+  return SliverFixedExtentList(
+    itemExtent: 50,
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        return ListTile(title: Text('$index'));
+      },
+      childCount: count,
+    ),
+  );
 }
 
 class _SliverFlexibleHeader extends SingleChildRenderObjectWidget {
@@ -1057,6 +1059,110 @@ class Chapter6S2Widget extends StatelessWidget {
           image: AssetImage("assets/images/59462104.jpg"),
           width: 50.0,
         ),
+      ),
+    );
+  }
+}
+
+class Chapter6NestedWidget extends StatefulWidget {
+  const Chapter6NestedWidget({Key? key}) : super(key: key);
+
+  @override
+  State<Chapter6NestedWidget> createState() => _Chapter6NestedWidgetState();
+}
+
+class _Chapter6NestedWidgetState extends State<Chapter6NestedWidget> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = <Widget>[
+    // Index = 0
+    NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            title: const Text('Nested View'),
+            pinned: true,
+            forceElevated: innerBoxIsScrolled,
+          ),
+          buildSliverList(5),
+        ];
+      },
+      body: ListView.builder(
+        padding: const EdgeInsets.all(8),
+        physics: const ClampingScrollPhysics(),
+        itemCount: 30,
+        itemBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 50,
+            child: Center(
+              child: Text('Item $index'),
+            ),
+          );
+        },
+      ),
+    ),
+    // Index = 1
+    NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          // 实现 snap 效果
+          // 获取 SliverAppBar 返回时遮住内部可滚动组件的部分的长度，这个长度就是 overlap（重叠） 的长度。
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverAppBar(
+              floating: true,
+              snap: true,
+              expandedHeight: 200,
+              forceElevated: innerBoxIsScrolled,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image.asset(
+                  "assets/images/1finger.png",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ];
+      },
+      body: Builder(builder: (BuildContext context) {
+        return CustomScrollView(
+          slivers: <Widget>[
+            // 将 SliverOverlapAbsorber 中获取的 overlap 长度应用到内部可滚动组件中。
+            // 这样在 SliverAppBar 返回时内部可滚动组件也会相应的同步滑动相应的距离。
+            // 防止被顶部遮住
+            // 而只有当 SliverAppBar 别 SliverOverlapAbsorber 包裹且为固定模式时（pinned 为 true ），
+            // CustomScrollView 中添加SliverOverlapInjector 才有意义
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            buildSliverList(100)
+          ],
+        );
+      }),
+    ),
+    // Index = 2
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chapter 6 Nested Scroll Widget'),
+      ),
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        currentIndex: _currentIndex,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(Icons.one_k), label: 'Nested Simple'),
+          BottomNavigationBarItem(icon: Icon(Icons.two_k), label: 'Nested 2'),
+          BottomNavigationBarItem(icon: Icon(Icons.three_k), label: '3'),
+        ],
       ),
     );
   }
