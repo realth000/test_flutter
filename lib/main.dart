@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:test_flutter/chapter6.dart';
 
 import 'chapter4.dart';
 import 'chapter5.dart';
+import 'chapter6.dart';
+import 'chapter7.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         "chapter_4": (context) => const Chapter4Route(),
         "chapter_5": (context) => const Chapter5Route(),
         "chapter_6": (context) => const Chapter6Route(),
+        "chapter_7": (context) => const Chapter7Route(),
         "chapter_4/constraint_widget": (context) =>
             const Chapter4ConstraintsWidget(),
         "chapter_4/row_column_widget": (context) =>
@@ -60,6 +62,13 @@ class MyApp extends StatelessWidget {
             const Chapter6SliverFlexibleWidget(),
         "chapter_6/s2_widget": (context) => const Chapter6S2Widget(),
         "chapter_6/nested_widget": (context) => const Chapter6NestedWidget(),
+        "chapter_7/willpopscope_widget": (context) =>
+            const Chapter7WillPopScopeWidget(),
+        "chapter_7/theme_widget": (context) => const Chapter7ThemeWidget(),
+        "chapter_7/value_listener_widget": (context) =>
+            const Chapter7ValueListenerWidget(),
+        "chapter_7/update_widget": (context) => const Chapter7UpdateWidget(),
+        "chapter_7/dialog_widget": (context) => const Chapter7DialogWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
@@ -129,6 +138,12 @@ class _MyHomePageState extends State<_MyHomePage> {
                   Navigator.pushNamed(context, "chapter_6");
                 },
                 child: const Text("Open chapter 6 route ✌✌✌✌✌✌"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "chapter_7");
+                },
+                child: const Text("Open chapter 7 route ✌✌✌✌✌✌✌"),
               ),
             ],
           ),
