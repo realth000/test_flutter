@@ -36,6 +36,8 @@ class Chapter7Widget extends StatelessWidget {
                     'chapter_7/update_widget'),
                 getRoute(context, 'Chapter 7 Dialog Widget',
                     'chapter_7/dialog_widget'),
+                getRoute(context, 'Chapter 7 General Widget',
+                    'chapter_7/general_widget'),
               ],
             ),
           ),
@@ -417,6 +419,23 @@ class Chapter7DialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<int?> _showModalBottomSheet() {
+      return showModalBottomSheet<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return ListView.builder(
+            itemCount: 30,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text("$index"),
+                onTap: () => Navigator.of(context).pop(index),
+              );
+            },
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chapter 7 Dialog Widget'),
@@ -529,7 +548,7 @@ class Chapter7DialogWidget extends StatelessWidget {
                   builder: (BuildContext context) {
                     var child = Column(
                       children: <Widget>[
-                        ListTile(title: const Text("请选择")),
+                        const ListTile(title: Text("请选择")),
                         Expanded(
                           child: ListView.builder(
                             itemCount: 30,
@@ -554,9 +573,155 @@ class Chapter7DialogWidget extends StatelessWidget {
               },
               child: const Text('Select view'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                bool? _withTree = false;
+                bool? _delete = await showCustomDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('提示'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Text('确定删除？'),
+                            Row(
+                              children: <Widget>[
+                                const Text("同时删除子目录？"),
+                                Builder(
+                                  builder: (BuildContext context) {
+                                    return Checkbox(
+                                      value: _withTree,
+                                      onChanged: (value) {
+                                        (context as Element).markNeedsBuild();
+                                        _withTree = value;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('取消'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text('确定'),
+                          ),
+                        ],
+                      );
+                    });
+                if (_delete == null) {
+                  showToast("删除已取消");
+                } else {
+                  if (_withTree != null && _withTree == true) {
+                    showToast("删除成功，同时删除子目录");
+                  } else {
+                    showToast("删除成功");
+                  }
+                }
+              },
+              child: const Text('自定义对话框'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                int? type = await _showModalBottomSheet();
+                if (type != null) {
+                  showToast("选择了 $type");
+                }
+              },
+              child: const Text("显示底部菜单列表"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return UnconstrainedBox(
+                      constrainedAxis: Axis.vertical,
+                      child: SizedBox(
+                        width: 280,
+                        child: AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const <Widget>[
+                              CircularProgressIndicator(),
+                              Padding(
+                                padding: EdgeInsets.only(top: 18),
+                                child: Text("正在加载"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: const Text("打开loading"),
+            ),
           ],
         ),
       ),
     );
+  }
+}
+
+Future<T?> showCustomDialog<T>({
+  required BuildContext context,
+  bool barrierDismissible = true,
+  required WidgetBuilder builder,
+  ThemeData? theme,
+}) {
+  final ThemeData theme = Theme.of(context);
+  return showGeneralDialog(
+    context: context,
+    pageBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      final Widget pageChild = Builder(builder: builder);
+      return SafeArea(
+        child: Builder(
+          builder: (BuildContext context) {
+            return Theme(
+              data: theme,
+              child: pageChild,
+            );
+          },
+        ),
+      );
+    },
+    barrierDismissible: barrierDismissible,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    barrierColor: Colors.black87,
+    transitionDuration: const Duration(milliseconds: 150),
+    transitionBuilder: _buildMaterialDialogTransitions,
+  );
+}
+
+Widget _buildMaterialDialogTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child) {
+  return ScaleTransition(
+    scale: CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOut,
+    ),
+    child: child,
+  );
+}
+
+class Chapter7GeneralWidget extends StatelessWidget {
+  const Chapter7GeneralWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }

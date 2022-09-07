@@ -69,6 +69,7 @@ class MyApp extends StatelessWidget {
             const Chapter7ValueListenerWidget(),
         "chapter_7/update_widget": (context) => const Chapter7UpdateWidget(),
         "chapter_7/dialog_widget": (context) => const Chapter7DialogWidget(),
+        "chapter_7/general_widget": (context) => const Chapter7GeneralWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
