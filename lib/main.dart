@@ -7,6 +7,7 @@ import 'chapter4.dart';
 import 'chapter5.dart';
 import 'chapter6.dart';
 import 'chapter7.dart';
+import 'chapter8.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         "chapter_5": (context) => const Chapter5Route(),
         "chapter_6": (context) => const Chapter6Route(),
         "chapter_7": (context) => const Chapter7Route(),
+        "chapter_8": (context) => const Chapter8Route(),
         "chapter_4/constraint_widget": (context) =>
             const Chapter4ConstraintsWidget(),
         "chapter_4/row_column_widget": (context) =>
@@ -70,6 +72,9 @@ class MyApp extends StatelessWidget {
         "chapter_7/update_widget": (context) => const Chapter7UpdateWidget(),
         "chapter_7/dialog_widget": (context) => const Chapter7DialogWidget(),
         "chapter_7/general_widget": (context) => const Chapter7GeneralWidget(),
+        "chapter_8/listener_widget": (context) =>
+            const Chapter8ListenerWidget(),
+        "chapter_8/gesture_widget": (context) => const Chapter8GestureWidget(),
         "/": (context) => const _MyHomePage(title: 'flutter demo home page'),
       },
     );
@@ -145,6 +150,12 @@ class _MyHomePageState extends State<_MyHomePage> {
                   Navigator.pushNamed(context, "chapter_7");
                 },
                 child: const Text("Open chapter 7 route ✌✌✌✌✌✌✌"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "chapter_8");
+                },
+                child: const Text("Open chapter 8 route ✌✌✌✌✌✌✌✌"),
               ),
             ],
           ),
